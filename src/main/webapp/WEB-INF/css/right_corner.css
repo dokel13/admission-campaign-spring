@@ -1,0 +1,30 @@
+.logout{
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: black;
+    padding: 4px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    width: 55px;
+    box-shadow: 0 5px 8px 0 rgba(255, 255, 0, 1), 0 9px 26px 0 rgba(255, 255, 0, 0.19);
+}
+.right-corner{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 20px 150px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 20%, blue 100%);
+}
+.language{
+    position: absolute;
+    top: 5px;
+    right: 100px;
+    color: yellow;
+}
+.language a{
+    color: yellow;
+    text-decoration: none;
+}
