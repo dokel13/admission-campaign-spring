@@ -15,7 +15,7 @@ public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
-    private int roleId;
+    private int id;
 
     @Column(name = "role", nullable = false, length = 45)
     private String role;
@@ -23,7 +23,8 @@ public class RoleEntity {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserEntity> users;
 
-    public RoleEntity(String role) {
+    public RoleEntity(Integer id, String role) {
+        this.id = id;
         this.role = role;
     }
 }

@@ -33,21 +33,21 @@ INSERT INTO `requirements` VALUES (16,6,1,160);
 INSERT INTO `requirements` VALUES (17,6,2,170);
 INSERT INTO `requirements` VALUES (18,6,3,160);
 
-INSERT INTO `users` VALUES (1,1,'admin@gmail.com','!#/)zW��C�JJ��','Oleksiy','Huts');
-INSERT INTO `users` VALUES (2,2,'andriy@ukr.net','����f+Ҩ<�����','Андрій','Андрієнко');
-INSERT INTO `users` VALUES (3,2,'barak@ukr.net','U\Zp���LY��8�S','Барак','Обама');
-INSERT INTO `users` VALUES (4,2,'vasil@gmail.com','�����i�2)��\'\"�','Vasil','Vasilevych');
-INSERT INTO `users` VALUES (5,2,'hryhorii@ukr.net','�]N)\Z���\'ĝ7J','Григорій','Григорович');
-INSERT INTO `users` VALUES (6,2,'george@gmail.com','�0j�N��_�����j�','George','Michael');
-INSERT INTO `users` VALUES (7,2,'dmytro@ukr.net','�m��H�֧�1�֛��','Дмитро','Дмитренко');
-INSERT INTO `users` VALUES (8,2,'ewan@gmail.com','��X���ZN�����{�','Ewan','McGregor');
-INSERT INTO `users` VALUES (9,2,'yevhen@ukr.net','A�[��M���	���h','Євген','Євгенович');
-INSERT INTO `users` VALUES (10,2,'john@gmail.com','R{յ։��*�t�\"���','John','McClane');
-INSERT INTO `users` VALUES (11,2,'zakhar@ukr.net','����q@�� $�u�','Захар','Захарченко');
-INSERT INTO `users` VALUES (12,2,'ihor@gmail.com','VsyX�3�Ajԛ݂�5','Ihor','Ihorovskyi');
-INSERT INTO `users` VALUES (13,2,'yoakym@ukr.net','�-xE-�޽5P�/�','Йоаким','Йоакимович');
-INSERT INTO `users` VALUES (14,2,'kuzma@gmail.com','z\Z��yẋC�O6�','Kuzma','Kuzmenko');
-INSERT INTO `users` VALUES (15,2,'lavrentii@ukr.net','�6��ȶ|TdiыK5','Лаврентій','Лаврентович');
+INSERT INTO `users` VALUES (1,1,'admin@gmail.com','$2a$10$E53OxINOA5l7o.qMn4jnZOf0L0fBSmBjGhgv07qNrn2XsZS0yXE/S','Oleksiy','Huts');
+INSERT INTO `users` VALUES (2,2,'andriy@ukr.net','$2a$10$1FSG/o46TXTZaYy2Ul9VaO6e2ZEafJOdVMwUJMRgBK15vUZtYK3Ea','Андрій','Андрієнко');
+INSERT INTO `users` VALUES (3,2,'barak@ukr.net','$2a$10$hb6NkHtwLdgUNzxK0bwNTOIbLTDeXd7hIn4QTUUi2flju9uO3onty','Барак','Обама');
+INSERT INTO `users` VALUES (4,2,'vasil@gmail.com','$2a$10$bH1yqjVfqHwn2YoTMitq6eBHD654cR9qVaAr02x2v4zD0GibbEJcS','Vasil','Vasilevych');
+INSERT INTO `users` VALUES (5,2,'hryhorii@ukr.net','$2a$10$wC/rmsWUSZsywZFES5jwneEzD.DVGhhjE/GMVCzNHCPY4K4KYQE6m','Григорій','Григорович');
+INSERT INTO `users` VALUES (6,2,'george@gmail.com','$2a$10$9VPb5hCH3Uj3RaMXb3516OEMk/DSusYK01TFO.LQhrCYsNk2W8pT.','George','Michael');
+INSERT INTO `users` VALUES (7,2,'dmytro@ukr.net','$2a$10$FetvCnktniFBCDDboNhyG.7BeFRGugFPu5PojG6iDHS5T5yMooMf2','Дмитро','Дмитренко');
+INSERT INTO `users` VALUES (8,2,'ewan@gmail.com','$2a$10$xr3NUlzH/WAhr6JK9ehWaei2dcKMFdlSNOjSTgq8Zad/ywfXq8Fw.','Ewan','McGregor');
+INSERT INTO `users` VALUES (9,2,'yevhen@ukr.net','$2a$10$Zr3sJMjtc4bjdKF76zdDyO9dOkH0Qxc7b6q2.hoKJGvr0emSMUIyi','Євген','Євгенович');
+INSERT INTO `users` VALUES (10,2,'john@gmail.com','$2a$10$65FPQ6SoyteUfEnpWtXFiOi1lOd.yv0cQhsfXp4gEM1zgGVcUmNTC','John','McClane');
+INSERT INTO `users` VALUES (11,2,'zakhar@ukr.net','$2a$10$8rKayRCwUfwCqAeD.x6TH.DBJZFb.iyIda0WeP0LY6yfQ4O5viXu2','Захар','Захарченко');
+INSERT INTO `users` VALUES (12,2,'ihor@gmail.com','$2a$10$UZg.i8NHc9EghbvSzmlljuBvxfmnc2lAp7B6BTzworqUWjMREkpwu','Ihor','Ihorovskyi');
+INSERT INTO `users` VALUES (13,2,'yoakym@ukr.net','$2a$10$aJitsg2FMTMRBiTdKrkMouIk4ogwPF3/bDS2lEdFor8DCBC7/w6XG','Йоаким','Йоакимович');
+INSERT INTO `users` VALUES (14,2,'kuzma@gmail.com','$2a$10$qzPE0zH8W2brMQZjEN4ku.vw0ulEVpHKALivyQtwwoKC7IwxONgFK','Kuzma','Kuzmenko');
+INSERT INTO `users` VALUES (15,2,'lavrentii@ukr.net','$2a$10$70IftbrtMR1taoFvcihvYuzNs83NLSBS537k2tq4k4D9XEiGN2FmC','Лаврентій','Лаврентович');
 
 INSERT INTO `exams` VALUES (1,2,4,NULL);
 INSERT INTO `exams` VALUES (2,2,5,NULL);

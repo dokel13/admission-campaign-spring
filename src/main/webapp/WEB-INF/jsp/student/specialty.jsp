@@ -17,8 +17,8 @@
         <div class="right-corner">
             <div class="language">
                 <fmt:message var="choose_ukrainian" key="choose.ukrainian" bundle="${messages}"/>
-                <a href="${pageContext.request.contextPath}/api/student/specialty?${specialty.name}&locale=ua" title="${choose_ukrainian}">UA</a>/
-                <a href="${pageContext.request.contextPath}/api/student/specialty?${specialty.name}&locale=en" title="choose English">EN</a>
+                <a href="${pageContext.request.contextPath}/api/student/specialty/${specialty.name}?locale=ua" title="${choose_ukrainian}">UA</a>/
+                <a href="${pageContext.request.contextPath}/api/student/specialty/${specialty.name}?locale=en" title="choose English">EN</a>
             </div>
             <%@include file="/WEB-INF/jsp/logout.jsp" %>
         </div>
@@ -57,7 +57,7 @@
                         <c:remove var="exception" scope="session" />
                     </span>
                 </c:if>
-                <a class="btnSubmit" href="${pageContext.request.contextPath}/api/student/specialty/apply?${specialty.name}&locale=${sessionScope.locale}">
+                <a class="btnSubmit" href="${pageContext.request.contextPath}/api/student/specialty/apply/${specialty.name}?locale=${sessionScope.locale}">
                     <fmt:message key="apply" bundle="${messages}"/>
                 </a>
             </div>

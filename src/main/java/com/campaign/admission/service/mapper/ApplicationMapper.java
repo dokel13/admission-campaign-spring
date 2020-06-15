@@ -19,7 +19,7 @@ public class ApplicationMapper {
 
     public Application mapApplicationFromEntity(ApplicationEntity entity) {
         try {
-            return isNull(entity) ? Application.builder().build() : Application.builder()
+            return isNull(entity) ? null : Application.builder()
                     .user(User.builder()
                             .email(entity.getUser().getEmail())
                             .name(entity.getUser().getName())
@@ -28,6 +28,7 @@ public class ApplicationMapper {
                     .specialty(Specialty.builder()
                             .name(entity.getSpecialty().getSpecialty())
                             .build())
+                    .markSum(entity.getMarkSum())
                     .enrollment(entity.isEnrollment())
                     .build();
         } catch (Exception exception) {
@@ -37,11 +38,10 @@ public class ApplicationMapper {
         }
     }
 
-    public ApplicationEntity mapEntityFromApplication(Application application) {
+    public ApplicationEntity mapEntityFromApplication(Application application, UserEntity user, SpecialtyEntity specialty) {
         try {
             return isNull(application) ? null :
-                    new ApplicationEntity(new UserEntity(application.getUser().getEmail()),
-                            new SpecialtyEntity(application.getSpecialty().getName()),
+                    new ApplicationEntity(user, specialty,
                             application.getMarkSum());
         } catch (Exception exception) {
             String message = "ApplicationEntity mapping exception!";

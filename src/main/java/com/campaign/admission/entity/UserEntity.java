@@ -15,12 +15,12 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private int userId;
+    private int id;
 
     @Column(name = "email", nullable = false, unique = true, length = 45)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 45)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @Column(name = "name", nullable = false, length = 45)

@@ -14,7 +14,7 @@ public class RequirementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "requirement_id", nullable = false)
-    private int requirementId;
+    private int id;
 
     @Column(name = "mark", nullable = false)
     private int mark;
@@ -23,7 +23,7 @@ public class RequirementEntity {
     @JoinColumn(name = "specialty", referencedColumnName = "specialty_id", nullable = false)
     private SpecialtyEntity specialty;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subject", referencedColumnName = "subject_id", nullable = false)
     private SubjectEntity subject;
 }

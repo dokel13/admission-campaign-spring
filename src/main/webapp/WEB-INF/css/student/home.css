@@ -83,7 +83,7 @@
     font-size: 25px;
 }
 .results{
-    position: relative;
-    top: 170px;
-    left: 125px;
+    position: absolute;
+    top: 550px;
+    left: 640px;
 }

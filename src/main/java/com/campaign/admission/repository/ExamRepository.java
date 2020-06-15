@@ -3,7 +3,7 @@ package com.campaign.admission.repository;
 import com.campaign.admission.entity.ExamEntity;
 import com.campaign.admission.entity.SubjectEntity;
 import com.campaign.admission.entity.UserEntity;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,5 +33,5 @@ public interface ExamRepository extends JpaRepository<ExamEntity, Integer> {
 
     List<ExamEntity> findByUser(UserEntity user);
 
-    Page<ExamEntity> findBySubject(SubjectEntity subject, Pageable page);
+    PageImpl<ExamEntity> findBySubject(SubjectEntity subject, Pageable page);
 }

@@ -14,7 +14,7 @@ public class ApplicationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "application_id", nullable = false)
-    private int applicationId;
+    private int id;
 
     @Column(name = "enrollment", nullable = false)
     private boolean enrollment;
@@ -22,7 +22,7 @@ public class ApplicationEntity {
     @Column(name = "mark_sum")
     private Integer markSum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialty", referencedColumnName = "specialty_id", nullable = false)
     private SpecialtyEntity specialty;
 

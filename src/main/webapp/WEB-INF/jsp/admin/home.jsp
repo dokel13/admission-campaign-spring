@@ -32,7 +32,7 @@
                                     <tr>
                                         <fmt:message var="subject_locale" key="${subject}" bundle="${messages}"/>
                                         <fmt:message var="subject_admin_message" key="subject.admin.message" bundle="${messages}"/>
-                                        <td><a class="sub-ref" href="${pageContext.request.contextPath}/api/admin/subject?${subject}&page=1&locale=${sessionScope.locale}"
+                                        <td><a class="sub-ref" href="${pageContext.request.contextPath}/api/admin/subject/${subject}?page=1&locale=${sessionScope.locale}"
                                             title="${subject_admin_message}">${subject_locale}</a></td>
                                     </tr>
                                 </c:forEach>

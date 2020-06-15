@@ -3,20 +3,15 @@ package com.campaign.admission.service;
 import com.campaign.admission.domain.Application;
 import com.campaign.admission.domain.Exam;
 import com.campaign.admission.domain.Specialty;
-import com.campaign.admission.domain.User;
 import com.campaign.admission.entity.ApplicationEntity;
-import com.campaign.admission.entity.SpecialtyEntity;
-import com.campaign.admission.entity.UserEntity;
 import com.campaign.admission.exception.ServiceRuntimeException;
-import com.campaign.admission.repository.ApplicationRepository;
-import com.campaign.admission.repository.ExamRepository;
-import com.campaign.admission.repository.SpecialtyRepository;
+import com.campaign.admission.repository.*;
 import com.campaign.admission.service.mapper.ApplicationMapper;
 import com.campaign.admission.service.mapper.ExamMapper;
 import com.campaign.admission.service.mapper.SpecialtyMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +21,7 @@ import java.util.List;
 import static com.campaign.admission.util.AdmissionValidator.validateAdmissionOpen;
 import static com.campaign.admission.util.AdmissionValidator.validateMarks;
 import static java.util.Arrays.stream;
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -34,6 +29,8 @@ import static java.util.stream.Collectors.toList;
 public class StudentServiceImpl implements StudentService {
 
     private final ExamRepository examRepository;
+    private final UserRepository userRepository;
+    private final SubjectRepository subjectRepository;
     private final SpecialtyRepository specialtyRepository;
     private final ApplicationRepository applicationRepository;
     private final SpecialtyMapper specialtyMapper;
@@ -60,8 +57,7 @@ public class StudentServiceImpl implements StudentService {
     public void saveExamSubjects(String[] subjects, String email) {
         if (subjects != null) {
             stream(subjects).forEach(subject -> examRepository.save(examMapper
-                    .mapEntityFromExam(Exam.builder().subject(subject)
-                            .user(User.builder().email(email).build()).build())));
+                    .mapEntityFromExam(subjectRepository.findBySubject(subject), userRepository.findByEmail(email))));
         }
     }
 
@@ -77,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Exam> getResults(String email) {
-        return examRepository.findByUser(new UserEntity(email))
+        return examRepository.findByUser(userRepository.findByEmail(email))
                 .stream().map(examMapper::mapExamFromEntity)
                 .collect(toList());
     }
@@ -89,19 +85,20 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return applicationMapper.mapApplicationFromEntity(applicationRepository
-                .findByUser(new UserEntity(email)));
+                .findByUser(userRepository.findByEmail(email)));
     }
 
     @Override
     public Integer countApplicationsBySpecialty(String specialty) {
-        return applicationRepository.countBySpecialty(new SpecialtyEntity(specialty));
+        return applicationRepository.countBySpecialty(specialtyRepository.findBySpecialty(specialty));
     }
 
     @Override
     public List<Application> getApplicationsPaginated(String specialty, Integer page, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
-        Page<ApplicationEntity> applications = applicationRepository.findBySpecialty(new SpecialtyEntity(specialty), pageRequest);
-        if (applications.hasNext()) {
+        PageImpl<ApplicationEntity> applications = applicationRepository.findBySpecialty(specialtyRepository
+                .findBySpecialty(specialty), pageRequest);
+        if (applications.hasContent()) {
             return applications.stream().map(applicationMapper::mapApplicationFromEntity).collect(toList());
         }
 
@@ -114,14 +111,9 @@ public class StudentServiceImpl implements StudentService {
         Specialty specialty = specialtyMapper.mapSpecialtyFromEntity(specialtyRepository
                 .findBySpecialty(specialtyName));
         int markSum = applicationValidator(email, specialty);
-        User user = User.builder()
-                .email(email)
-                .build();
         applicationRepository.save(applicationMapper.mapEntityFromApplication(Application.builder()
-                .user(user)
-                .specialty(specialty)
                 .markSum(markSum)
-                .build()));
+                .build(), userRepository.findByEmail(email), specialtyRepository.findBySpecialty(specialtyName)));
 
         return specialtyName;
     }
@@ -130,10 +122,10 @@ public class StudentServiceImpl implements StudentService {
         if (!specialty.getOpen()) {
             throw new ServiceRuntimeException("Admission is closed!");
         }
-        of(applicationRepository.findByUser(new UserEntity(email))).ifPresent(app -> {
+        ofNullable(applicationRepository.findByUser(userRepository.findByEmail(email))).ifPresent(app -> {
             throw new ServiceRuntimeException("User already has application!");
         });
-        List<Exam> exams = examRepository.findByUser(new UserEntity(email))
+        List<Exam> exams = examRepository.findByUser(userRepository.findByEmail(email))
                 .stream().map(examMapper::mapExamFromEntity).collect(toList());
 
         return validateMarks(exams, specialty.getRequirements());

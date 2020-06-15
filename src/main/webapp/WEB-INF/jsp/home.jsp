@@ -4,7 +4,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle var="messages" basename="messages"/>
 <html>
-    <head>and ${sessionScope.locale} and ${locale}
+    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title><fmt:message key="login.page" bundle="${messages}"/></title>
         <style><%@include file="/WEB-INF/css/home.css" %></style>
@@ -61,7 +61,6 @@
                         <c:if test="${sessionScope.exception.message == 'Wrong email!'}">
                             <span class="popup_text" id="my_popup">
                                 <fmt:message key="wrong.email" bundle="${messages}"/>
-                                "${sessionScope.exception.wrongValue}"
                                 <c:remove var="exception" scope="session"/>
                             </span>
                         </c:if>

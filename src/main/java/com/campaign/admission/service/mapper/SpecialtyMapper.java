@@ -20,7 +20,7 @@ public class SpecialtyMapper {
     public Specialty mapSpecialtyFromEntity(SpecialtyEntity entity) {
         try {
             if (isNull(entity)) {
-                return Specialty.builder().build();
+                return null;
             }
             List<Requirement> requirements = entity.getRequirements().stream().map(r ->
                     Requirement.builder()

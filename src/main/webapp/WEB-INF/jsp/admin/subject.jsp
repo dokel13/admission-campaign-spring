@@ -16,8 +16,8 @@
         <div class="right-corner">
             <div class="language">
                 <fmt:message var="choose_ukrainian" key="choose.ukrainian" bundle="${messages}"/>
-                <a href="${pageContext.request.contextPath}/api/admin/subject?${subject}&page=${page}&locale=ua" title="${choose_ukrainian}">UA</a>/
-                <a href="${pageContext.request.contextPath}/api/admin/subject?${subject}&page=${page}&locale=en" title="choose English">EN</a>
+                <a href="${pageContext.request.contextPath}/api/admin/subject/${subject}?page=${page}&locale=ua" title="${choose_ukrainian}">UA</a>/
+                <a href="${pageContext.request.contextPath}/api/admin/subject/${subject}?page=${page}&locale=en" title="choose English">EN</a>
             </div>
             <%@include file="/WEB-INF/jsp/logout.jsp" %>
         </div>
@@ -27,7 +27,7 @@
                                             title="${back_message}"><span class="symbol">&#11013;</span>${back_button}</a>
         <h3 class="title"><fmt:message key="${subject}" bundle="${messages}"/></h3>
         <div class="table-container">
-            <form class="checkbox-form" method="post" action="${pageContext.request.contextPath}/api/admin/subject/save_marks?${subject}&page=${page}&locale=${sessionScope.locale}">
+            <form class="checkbox-form" method="post" action="${pageContext.request.contextPath}/api/admin/subject/save_marks/${subject}?page=${page}&locale=${sessionScope.locale}">
                 <table class="exam-table">
                     <thead>
                         <tr>
@@ -53,9 +53,9 @@
             </form>
         </div>
         <div class="button-container">
-            <a class="page-button" href="${pageContext.request.contextPath}/api/admin/subject?${subject}&page=${page - 1}&locale=${sessionScope.locale}">
+            <a class="page-button" href="${pageContext.request.contextPath}/api/admin/subject/${subject}?page=${page - 1}&locale=${sessionScope.locale}">
                 <span class="symbol">←</span></a>
-            <a class="page-button" href="${pageContext.request.contextPath}/api/admin/subject?${subject}&page=${page + 1}&locale=${sessionScope.locale}">
+            <a class="page-button" href="${pageContext.request.contextPath}/api/admin/subject/${subject}?page=${page + 1}&locale=${sessionScope.locale}">
                 <span class="symbol">→</span></a>
         </div>
     </body>

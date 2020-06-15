@@ -13,13 +13,14 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Component
-public class UserMapper {
+public class UserMapper implements Mapper<User, UserEntity> {
 
-    public User mapUserFromEntity(UserEntity entity) {
+    public User mapDomainFromEntity(UserEntity entity) {
         try {
-            return isNull(entity) ? User.builder().build() : User.builder()
-                    .role(Role
-                            .valueOf(entity.getRole().getRole()))
+            return isNull(entity) ? null : User.builder()
+                    .role(Role.valueOf(entity
+                            .getRole()
+                            .getRole()))
                     .email(entity.getEmail())
                     .password(entity.getPassword())
                     .name(entity.getName())
@@ -32,13 +33,14 @@ public class UserMapper {
         }
     }
 
-    public UserEntity mapEntityFromUser(User user) {
+    @Override
+    public UserEntity mapEntityFromDomain(User user) {
         try {
             return isNull(user) ? null : new UserEntity(user.getEmail(),
                     user.getPassword(),
                     user.getName(),
                     user.getSurname(),
-                    new RoleEntity(user.getRole().toString()));
+                    new RoleEntity(user.getRole().getId(), user.getRole().toString()));
         } catch (Exception exception) {
             String message = "UserEntity mapping exception!";
             log.warn(message, exception);

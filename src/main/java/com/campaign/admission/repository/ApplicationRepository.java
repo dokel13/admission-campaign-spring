@@ -4,6 +4,7 @@ import com.campaign.admission.entity.ApplicationEntity;
 import com.campaign.admission.entity.SpecialtyEntity;
 import com.campaign.admission.entity.UserEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,5 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
 
     Integer countBySpecialty(SpecialtyEntity specialty);
 
-    Page<ApplicationEntity> findBySpecialty(SpecialtyEntity specialty, Pageable page);
+    PageImpl<ApplicationEntity> findBySpecialty(SpecialtyEntity specialty, Pageable page);
 }

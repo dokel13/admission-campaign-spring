@@ -1,15 +1,16 @@
 package com.campaign.admission.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
 public class StartController {
 
     @RequestMapping("/")
-    public String redirect() {
-        return "redirect:/api/home";
+    public String redirect(HttpServletRequest request) {
+        return "redirect:/api/home?" + request.getQueryString();
     }
 }

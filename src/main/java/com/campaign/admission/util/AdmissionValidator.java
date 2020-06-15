@@ -26,12 +26,13 @@ public class AdmissionValidator {
                 result += exam.getMark();
             }
         }
+
         return result;
     }
 
     public static boolean validateAdmissionOpen(List<Boolean> opens) {
         boolean checkOpen = opens.get(0);
-        for (Boolean b: opens) {
+        for (Boolean b : opens) {
             if (checkOpen != b) {
                 throw new AdmissionValidatorRuntimeException("Specialties' opens aren't synchronized!");
             }

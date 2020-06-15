@@ -15,7 +15,7 @@ public class SpecialtyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "specialty_id", nullable = false)
-    private int specialtyId;
+    private int id;
 
     @Column(name = "specialty", nullable = false, length = 45)
     private String specialty;
@@ -26,7 +26,7 @@ public class SpecialtyEntity {
     @Column(name = "open", nullable = false)
     private boolean open;
 
-    @OneToMany(mappedBy = "specialty", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "specialty", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RequirementEntity> requirements;
 
     @OneToMany(mappedBy = "specialty", cascade = CascadeType.ALL, orphanRemoval = true)

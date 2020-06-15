@@ -1,6 +1,7 @@
 package com.campaign.admission.service.mapper;
 
 import com.campaign.admission.domain.Exam;
+import com.campaign.admission.domain.User;
 import com.campaign.admission.entity.ExamEntity;
 import com.campaign.admission.entity.SubjectEntity;
 import com.campaign.admission.entity.UserEntity;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Component
@@ -17,9 +19,14 @@ public class ExamMapper {
 
     public Exam mapExamFromEntity(ExamEntity entity) {
         try {
-            return isNull(entity) ? Exam.builder().build() : Exam.builder()
+            return isNull(entity) ? null : Exam.builder()
+                    .user(User.builder()
+                            .email(entity.getUser().getEmail())
+                            .name(entity.getUser().getName())
+                            .surname(entity.getUser().getSurname())
+                            .build())
                     .subject(entity.getSubject().getSubject())
-                    .mark(entity.getMark())
+                    .mark(ofNullable(entity.getMark()).orElse(0))
                     .build();
         } catch (Exception exception) {
             String message = "Exam mapping exception!";
@@ -28,10 +35,9 @@ public class ExamMapper {
         }
     }
 
-    public ExamEntity mapEntityFromExam(Exam exam) {
+    public ExamEntity mapEntityFromExam(SubjectEntity subject, UserEntity user) {
         try {
-            return isNull(exam) ? null : new ExamEntity(new SubjectEntity(exam.getSubject()),
-                    new UserEntity(exam.getUser().getEmail()));
+            return new ExamEntity(subject, user);
         } catch (Exception exception) {
             String message = "ExamEntity mapping exception!";
             log.warn(message, exception);

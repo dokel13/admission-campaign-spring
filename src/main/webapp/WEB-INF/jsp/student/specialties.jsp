@@ -34,7 +34,7 @@
                             <tr>
                                 <fmt:message var="specialty_locale" key="${specialty}" bundle="${messages}"/>
                                 <fmt:message var="specialty_message" key="specialty.message" bundle="${messages}"/>
-                                <td><a class="spec-ref" href="${pageContext.request.contextPath}/api/student/specialty?${specialty}&locale=${sessionScope.locale}"
+                                <td><a class="spec-ref" href="${pageContext.request.contextPath}/api/student/specialty/${specialty}?locale=${sessionScope.locale}"
                                     title="${specialty_message}">${specialty_locale}</a></td>
                             </tr>
                         </c:forEach>
