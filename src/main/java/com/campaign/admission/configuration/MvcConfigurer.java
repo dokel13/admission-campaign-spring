@@ -1,9 +1,12 @@
 package com.campaign.admission.configuration;
 
+import com.campaign.admission.configuration.interceptor.LocaleInterceptor;
+import com.campaign.admission.configuration.interceptor.PaginationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -24,33 +27,9 @@ public class MvcConfigurer implements WebMvcConfigurer {
         return resolver;
     }
 
-//    @Bean
-//    public LocaleResolver localeResolver() {
-//        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-//        localeResolver.setDefaultLocale(new Locale("ua"));
-//
-//        return localeResolver;
-//    }
-
-//    @Bean
-//    public MessageSource messageSource() {
-//        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//        messageSource.setBasename("classpath:messages");
-//        messageSource.setDefaultEncoding("UTF_8");
-//        messageSource.setUseCodeAsDefaultMessage(true);
-//        return messageSource;
-//    }
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
-//        localeInterceptor.setParamName("locale");
-//        registry.addInterceptor(localeInterceptor);
-//    }
-//
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/static/**")
-//                .addResourceLocations("/static/", "/css/");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LocaleInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new PaginationInterceptor()).addPathPatterns("/api/**");
+    }
 }

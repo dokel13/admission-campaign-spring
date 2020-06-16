@@ -21,18 +21,18 @@ import java.util.Map;
 @Component
 public class AuthenticationHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    private final Map<String, String> roleTargetUrlMap = new HashMap<>();
+    private final static Map<String, String> ROLE_TARGET_URL_MAP = new HashMap<>();
 
-    {
-        roleTargetUrlMap.put("STUDENT", "/api/student");
-        roleTargetUrlMap.put("ADMIN", "/api/admin");
+    static {
+        ROLE_TARGET_URL_MAP.put("STUDENT", "/api/student?");
+        ROLE_TARGET_URL_MAP.put("ADMIN", "/api/admin?");
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        Authentication authentication) throws IOException {
-        String targetUrl = determineTargetUrl(authentication);
+        RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+        String targetUrl = determineTargetUrl(authentication) + request.getQueryString();
         request.getSession().setAttribute("role", getRole(authentication));
         if (response.isCommitted()) {
             log.debug("Response already committed!");
@@ -47,9 +47,9 @@ public class AuthenticationHandler extends SimpleUrlAuthenticationSuccessHandler
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            if (roleTargetUrlMap.containsKey(authorityName)) {
+            if (ROLE_TARGET_URL_MAP.containsKey(authorityName)) {
 
-                return roleTargetUrlMap.get(authorityName);
+                return ROLE_TARGET_URL_MAP.get(authorityName);
             }
         }
 

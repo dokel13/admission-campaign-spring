@@ -1,7 +1,6 @@
 package com.campaign.admission.configuration;
 
-import com.campaign.admission.controller.GlobalExceptionHandler;
-import com.campaign.admission.service.UserDetailsServiceImpl;
+import com.campaign.admission.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userService;
+    private final UserService userService;
     private final BCryptPasswordEncoder encoder;
     private final AuthenticationHandler handler;
     private final WrongAuthenticationHandler exceptionHandler;
@@ -32,14 +31,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-
                 .csrf()
                     .disable()
                 .authorizeRequests()
                     .antMatchers("/",
-                            "/api/home",
-                            "/api/login",
-                            "/api/register")
+                        "/api/home",
+                        "/api/login",
+                        "/api/register")
                         .permitAll()
                     .antMatchers("/api/student")
                         .hasAuthority("STUDENT")

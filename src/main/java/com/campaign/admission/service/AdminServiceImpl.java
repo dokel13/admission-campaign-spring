@@ -11,7 +11,6 @@ import com.campaign.admission.repository.SubjectRepository;
 import com.campaign.admission.service.mapper.ExamMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -65,7 +64,7 @@ public class AdminServiceImpl implements AdminService {
             PageRequest pageRequest = PageRequest.of(page, pageSize);
             PageImpl<ExamEntity> exams = examRepository.findBySubject(subjectRepository.findBySubject(subject), pageRequest);
             if (exams.hasContent()) {
-                return exams.stream().map(examMapper::mapExamFromEntity).collect(toList());
+                return exams.stream().map(examMapper::mapDomainFromEntity).collect(toList());
             }
         }
 

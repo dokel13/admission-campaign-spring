@@ -17,7 +17,7 @@ import static java.util.Optional.ofNullable;
 @Component
 public class ExamMapper {
 
-    public Exam mapExamFromEntity(ExamEntity entity) {
+    public Exam mapDomainFromEntity(ExamEntity entity) {
         try {
             return isNull(entity) ? null : Exam.builder()
                     .user(User.builder()
@@ -35,7 +35,7 @@ public class ExamMapper {
         }
     }
 
-    public ExamEntity mapEntityFromExam(SubjectEntity subject, UserEntity user) {
+    public ExamEntity mapEntityFromDomain(SubjectEntity subject, UserEntity user) {
         try {
             return new ExamEntity(subject, user);
         } catch (Exception exception) {

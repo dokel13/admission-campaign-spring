@@ -13,7 +13,7 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Component
-public class UserMapper implements Mapper<User, UserEntity> {
+public class UserMapper {
 
     public User mapDomainFromEntity(UserEntity entity) {
         try {
@@ -33,7 +33,6 @@ public class UserMapper implements Mapper<User, UserEntity> {
         }
     }
 
-    @Override
     public UserEntity mapEntityFromDomain(User user) {
         try {
             return isNull(user) ? null : new UserEntity(user.getEmail(),

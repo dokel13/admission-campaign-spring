@@ -57,7 +57,7 @@ public class StudentServiceImpl implements StudentService {
     public void saveExamSubjects(String[] subjects, String email) {
         if (subjects != null) {
             stream(subjects).forEach(subject -> examRepository.save(examMapper
-                    .mapEntityFromExam(subjectRepository.findBySubject(subject), userRepository.findByEmail(email))));
+                    .mapEntityFromDomain(subjectRepository.findBySubject(subject), userRepository.findByEmail(email))));
         }
     }
 
@@ -68,13 +68,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Specialty getSpecialty(String specialty) {
-        return specialtyMapper.mapSpecialtyFromEntity(specialtyRepository.findBySpecialty(specialty));
+        return specialtyMapper.mapDomainFromEntity(specialtyRepository.findBySpecialty(specialty));
     }
 
     @Override
     public List<Exam> getResults(String email) {
         return examRepository.findByUser(userRepository.findByEmail(email))
-                .stream().map(examMapper::mapExamFromEntity)
+                .stream().map(examMapper::mapDomainFromEntity)
                 .collect(toList());
     }
 
@@ -84,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
             return null;
         }
 
-        return applicationMapper.mapApplicationFromEntity(applicationRepository
+        return applicationMapper.mapDomainFromEntity(applicationRepository
                 .findByUser(userRepository.findByEmail(email)));
     }
 
@@ -99,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
         PageImpl<ApplicationEntity> applications = applicationRepository.findBySpecialty(specialtyRepository
                 .findBySpecialty(specialty), pageRequest);
         if (applications.hasContent()) {
-            return applications.stream().map(applicationMapper::mapApplicationFromEntity).collect(toList());
+            return applications.stream().map(applicationMapper::mapDomainFromEntity).collect(toList());
         }
 
         return null;
@@ -108,10 +108,10 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public String specialtyApply(String email, String specialtyName) {
-        Specialty specialty = specialtyMapper.mapSpecialtyFromEntity(specialtyRepository
+        Specialty specialty = specialtyMapper.mapDomainFromEntity(specialtyRepository
                 .findBySpecialty(specialtyName));
         int markSum = applicationValidator(email, specialty);
-        applicationRepository.save(applicationMapper.mapEntityFromApplication(Application.builder()
+        applicationRepository.save(applicationMapper.mapEntityFromDomain(Application.builder()
                 .markSum(markSum)
                 .build(), userRepository.findByEmail(email), specialtyRepository.findBySpecialty(specialtyName)));
 
@@ -126,7 +126,7 @@ public class StudentServiceImpl implements StudentService {
             throw new ServiceRuntimeException("User already has application!");
         });
         List<Exam> exams = examRepository.findByUser(userRepository.findByEmail(email))
-                .stream().map(examMapper::mapExamFromEntity).collect(toList());
+                .stream().map(examMapper::mapDomainFromEntity).collect(toList());
 
         return validateMarks(exams, specialty.getRequirements());
     }

@@ -17,7 +17,7 @@ import static java.util.Objects.isNull;
 @Component
 public class ApplicationMapper {
 
-    public Application mapApplicationFromEntity(ApplicationEntity entity) {
+    public Application mapDomainFromEntity(ApplicationEntity entity) {
         try {
             return isNull(entity) ? null : Application.builder()
                     .user(User.builder()
@@ -38,7 +38,7 @@ public class ApplicationMapper {
         }
     }
 
-    public ApplicationEntity mapEntityFromApplication(Application application, UserEntity user, SpecialtyEntity specialty) {
+    public ApplicationEntity mapEntityFromDomain(Application application, UserEntity user, SpecialtyEntity specialty) {
         try {
             return isNull(application) ? null :
                     new ApplicationEntity(user, specialty,

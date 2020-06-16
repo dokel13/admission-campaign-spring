@@ -1,9 +1,11 @@
 package com.campaign.admission.controller;
 
 import com.campaign.admission.domain.Exam;
+import com.campaign.admission.domain.User;
 import com.campaign.admission.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,13 +28,18 @@ public class AdminController {
 
     private static final Integer PAGE_SIZE = 3;
     private static final String PAGE_STRING = "page=";
-    private static final String QUERY_STRING = "&.*";
 
     private final AdminService adminService;
 
     @GetMapping
     public ModelAndView home() {
         ModelAndView model = new ModelAndView("admin/home");
+        User user = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        model.addObject("name", user.getName());
+        model.addObject("surname", user.getSurname());
         List<String> subjects = adminService.getAllSubjects();
         if (subjects != null) {
             model.addObject("subjects", subjects);
@@ -78,7 +85,9 @@ public class AdminController {
 
     @PostMapping("/subject/save_marks/{subject}")
     public String saveMarks(@PathVariable(value = "subject") String subject, HttpServletRequest request) {
-        adminService.saveMarks(subject, request.getParameterValues("email"), request.getParameterValues("mark"));
+        if (request.getParameterValues("mark") != null) {
+            adminService.saveMarks(subject, request.getParameterValues("email"), request.getParameterValues("mark"));
+        }
 
         return "redirect:/api/admin/subject/" + subject + "?" + request.getQueryString();
     }

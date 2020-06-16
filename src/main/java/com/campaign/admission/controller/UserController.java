@@ -71,31 +71,6 @@ public class UserController {
         return model;
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(@Valid @ModelAttribute("user") User newUser, BindingResult bindingResult,
-                              HttpServletRequest request) {
-        ModelAndView model = new ModelAndView("redirect:/api/home?" + request.getQueryString());
-        if (bindingResult.hasErrors()) {
-
-            return model;
-        }
-        try {
-            User user = userService.login(User.builder()
-                    .email(newUser.getEmail())
-                    .password(newUser.getPassword())
-                    .build());
-
-            request.getSession().setAttribute("role", user.getRole());
-            request.getSession().setAttribute("email", user.getEmail());
-            request.getSession().setAttribute("name", user.getName());
-            request.getSession().setAttribute("surname", user.getSurname());
-        } catch (ServiceRuntimeException | UserValidatorRuntimeException e) {
-            model.addObject("exception", e);
-        }
-
-        return model;
-    }
-
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();

@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class SpecialtyMapper {
 
-    public Specialty mapSpecialtyFromEntity(SpecialtyEntity entity) {
+    public Specialty mapDomainFromEntity(SpecialtyEntity entity) {
         try {
             if (isNull(entity)) {
                 return null;
