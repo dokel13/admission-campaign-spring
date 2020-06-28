@@ -4,6 +4,8 @@ import com.campaign.admission.domain.Application;
 import com.campaign.admission.domain.Exam;
 import com.campaign.admission.domain.Specialty;
 import com.campaign.admission.entity.ApplicationEntity;
+import com.campaign.admission.entity.SpecialtyEntity;
+import com.campaign.admission.entity.UserEntity;
 import com.campaign.admission.exception.ServiceRuntimeException;
 import com.campaign.admission.repository.*;
 import com.campaign.admission.service.mapper.ApplicationMapper;
@@ -23,6 +25,7 @@ import static com.campaign.admission.util.AdmissionValidator.validateMarks;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.data.domain.PageRequest.of;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Service
@@ -40,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<String> getUserFreeSubjects(String email) {
         if (validateAdmissionOpen(specialtyRepository.findSpecialtiesOpens())) {
-            List<String> subjects = examRepository.findUserFreeSubjects(email);
+            List<String> subjects = subjectRepository.findUserFreeSubjects(email);
             if (subjects.size() == 0) {
                 throw new ServiceRuntimeException("Finding subjects exception! No user free subjects are found!");
             } else {
@@ -95,8 +98,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Application> getApplicationsPaginated(String specialty, Integer page, Integer pageSize) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
-        PageImpl<ApplicationEntity> applications = applicationRepository.findBySpecialty(specialtyRepository
+        PageRequest pageRequest = of(page, pageSize);
+        PageImpl<ApplicationEntity> applications = applicationRepository.findBySpecialtyOrderByMarkSumDesc(specialtyRepository
                 .findBySpecialty(specialty), pageRequest);
         if (applications.hasContent()) {
             return applications.stream().map(applicationMapper::mapDomainFromEntity).collect(toList());
@@ -108,24 +111,25 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public String specialtyApply(String email, String specialtyName) {
-        Specialty specialty = specialtyMapper.mapDomainFromEntity(specialtyRepository
-                .findBySpecialty(specialtyName));
-        int markSum = applicationValidator(email, specialty);
+        SpecialtyEntity specialtyEntity = specialtyRepository.findBySpecialty(specialtyName);
+        Specialty specialty = specialtyMapper.mapDomainFromEntity(specialtyEntity);
+        UserEntity userEntity = userRepository.findByEmail(email);
+        int markSum = applicationValidator(userEntity, specialty);
         applicationRepository.save(applicationMapper.mapEntityFromDomain(Application.builder()
                 .markSum(markSum)
-                .build(), userRepository.findByEmail(email), specialtyRepository.findBySpecialty(specialtyName)));
+                .build(), userEntity, specialtyEntity));
 
         return specialtyName;
     }
 
-    private Integer applicationValidator(String email, Specialty specialty) {
+    private Integer applicationValidator(UserEntity userEntity, Specialty specialty) {
         if (!specialty.getOpen()) {
             throw new ServiceRuntimeException("Admission is closed!");
         }
-        ofNullable(applicationRepository.findByUser(userRepository.findByEmail(email))).ifPresent(app -> {
+        ofNullable(applicationRepository.findByUser(userEntity)).ifPresent(app -> {
             throw new ServiceRuntimeException("User already has application!");
         });
-        List<Exam> exams = examRepository.findByUser(userRepository.findByEmail(email))
+        List<Exam> exams = examRepository.findByUser(userEntity)
                 .stream().map(examMapper::mapDomainFromEntity).collect(toList());
 
         return validateMarks(exams, specialty.getRequirements());

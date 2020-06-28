@@ -1,5 +1,6 @@
 package com.campaign.admission.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class UserEntity {

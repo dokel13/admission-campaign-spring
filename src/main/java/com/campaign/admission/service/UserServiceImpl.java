@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByEmail(email);
         if (user == null) {
             String message = "Login exception! User doesn`t exist!";
-            log.warn(message);
+            log.info(message);
             throw new UsernameNotFoundException(message);
         }
 
@@ -44,11 +44,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         ofNullable(userRepository.findByEmail(user.getEmail())).ifPresent(user1 -> {
-            throw new ServiceRuntimeException("Registration exception! User already exists!");
+            String message = "Registration exception! User already exists!";
+            log.info(message);
+            throw new ServiceRuntimeException(message);
         });
         user.setPassword(encoder.encode(user.getPassword()));
-        user.getRole().setId(roleRepository.findByRole(user.getRole().toString()).getId());
 
-        return mapper.mapDomainFromEntity(userRepository.save(mapper.mapEntityFromDomain(user)));
+        return mapper.mapDomainFromEntity(userRepository.save(mapper.mapEntityFromDomain(user,
+                roleRepository.findByRole(user.getRole().toString()))));
     }
 }

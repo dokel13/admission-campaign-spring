@@ -4,9 +4,6 @@ public class UserValidatorRuntimeException extends RuntimeException {
 
     private String message;
 
-    public UserValidatorRuntimeException() {
-    }
-
     public UserValidatorRuntimeException(String message) {
         this.message = message;
     }

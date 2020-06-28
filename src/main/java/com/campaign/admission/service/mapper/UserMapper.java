@@ -28,21 +28,21 @@ public class UserMapper {
                     .build();
         } catch (Exception exception) {
             String message = "User mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new DatabaseRuntimeException(exception, message);
         }
     }
 
-    public UserEntity mapEntityFromDomain(User user) {
+    public UserEntity mapEntityFromDomain(User user, RoleEntity role) {
         try {
-            return isNull(user) ? null : new UserEntity(user.getEmail(),
+            return isNull(user) || isNull(role) ? null : new UserEntity(user.getEmail(),
                     user.getPassword(),
                     user.getName(),
                     user.getSurname(),
-                    new RoleEntity(user.getRole().getId(), user.getRole().toString()));
+                    role);
         } catch (Exception exception) {
             String message = "UserEntity mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new ServiceRuntimeException(exception, message);
         }
     }

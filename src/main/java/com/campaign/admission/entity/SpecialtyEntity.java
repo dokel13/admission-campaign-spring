@@ -1,5 +1,6 @@
 package com.campaign.admission.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "specialties")
 public class SpecialtyEntity {
@@ -34,5 +36,10 @@ public class SpecialtyEntity {
 
     public SpecialtyEntity(String specialty) {
         this.specialty = specialty;
+    }
+
+    public SpecialtyEntity(String specialty, int maxStudentAmount) {
+        this.specialty = specialty;
+        this.maxStudentAmount = maxStudentAmount;
     }
 }

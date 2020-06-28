@@ -1,9 +1,13 @@
 package com.campaign.admission.configuration;
 
+import com.campaign.admission.configuration.handler.AuthenticationHandler;
+import com.campaign.admission.configuration.handler.WrongAuthenticationHandler;
 import com.campaign.admission.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +25,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final AuthenticationHandler handler;
     private final WrongAuthenticationHandler exceptionHandler;
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -35,9 +45,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                     .disable()
                 .authorizeRequests()
                     .antMatchers("/",
-                        "/api/home",
-                        "/api/login",
-                        "/api/register")
+                            "/api/home",
+                            "/api/login",
+                            "/api/register",
+                            "/api/error")
                         .permitAll()
                     .antMatchers("/api/student")
                         .hasAuthority("STUDENT")

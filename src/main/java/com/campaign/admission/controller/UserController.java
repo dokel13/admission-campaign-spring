@@ -7,6 +7,9 @@ import com.campaign.admission.exception.UserValidatorRuntimeException;
 import com.campaign.admission.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @RequestMapping("/api")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -26,10 +30,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final AuthenticationManager authenticationManager;
+
     @GetMapping("/home")
     public ModelAndView home(HttpServletRequest request) {
         ModelAndView model = new ModelAndView();
-        Role role = (Role) request.getSession().getAttribute("role");
+        Role role = getRoleFromSecContext();
         if (role == Role.STUDENT) {
             model.setViewName("redirect:/api/student?" + request.getQueryString());
         } else if (role == Role.ADMIN) {
@@ -60,13 +66,13 @@ public class UserController {
                     .password(newUser.getPassword())
                     .build());
 
-            request.setAttribute("email", user.getEmail());
+            UsernamePasswordAuthenticationToken authReq
+                    = new UsernamePasswordAuthenticationToken(user.getEmail(), newUser.getPassword());
+            Authentication auth = authenticationManager.authenticate(authReq);
+            getContext().setAuthentication(auth);
         } catch (ServiceRuntimeException e) {
             model.addObject("exception", e);
-
-            return model;
         }
-        model.setViewName("redirect:/api/login?" + request.getQueryString());
 
         return model;
     }
@@ -76,5 +82,12 @@ public class UserController {
         session.invalidate();
 
         return "redirect:/api/home";
+    }
+
+    private Role getRoleFromSecContext() {
+        Authentication authentication = getContext().getAuthentication();
+
+        return authentication.getPrincipal().equals("anonymousUser") ? null
+                : ((User) authentication.getPrincipal()).getRole();
     }
 }

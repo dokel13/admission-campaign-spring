@@ -30,17 +30,17 @@ public class ExamMapper {
                     .build();
         } catch (Exception exception) {
             String message = "Exam mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new DatabaseRuntimeException(exception, message);
         }
     }
 
     public ExamEntity mapEntityFromDomain(SubjectEntity subject, UserEntity user) {
         try {
-            return new ExamEntity(subject, user);
+            return isNull(subject) || isNull(user) ? null : new ExamEntity(subject, user);
         } catch (Exception exception) {
             String message = "ExamEntity mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new ServiceRuntimeException(exception, message);
         }
     }

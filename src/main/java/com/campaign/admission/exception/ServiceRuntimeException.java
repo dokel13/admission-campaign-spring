@@ -4,9 +4,6 @@ public class ServiceRuntimeException extends RuntimeException {
 
     private String message;
 
-    public ServiceRuntimeException() {
-    }
-
     public ServiceRuntimeException(Throwable cause, String message) {
         super(cause);
         this.message = message;

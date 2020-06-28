@@ -3,10 +3,12 @@ package com.campaign.admission.util;
 import com.campaign.admission.domain.Exam;
 import com.campaign.admission.domain.Requirement;
 import com.campaign.admission.exception.AdmissionValidatorRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 public class AdmissionValidator {
 
@@ -21,7 +23,9 @@ public class AdmissionValidator {
                 }
             }
             if ((exam == null) || exam.getMark() < requirement.getMark()) {
-                throw new AdmissionValidatorRuntimeException("Insufficient marks for specialty admission!");
+                String message = "Insufficient marks for specialty admission!";
+                log.info(message);
+                throw new AdmissionValidatorRuntimeException(message);
             } else {
                 result += exam.getMark();
             }
@@ -34,7 +38,9 @@ public class AdmissionValidator {
         boolean checkOpen = opens.get(0);
         for (Boolean b : opens) {
             if (checkOpen != b) {
-                throw new AdmissionValidatorRuntimeException("Specialties' opens aren't synchronized!");
+                String message = "Specialties' opens aren't synchronized!";
+                log.warn(message);
+                throw new AdmissionValidatorRuntimeException(message);
             }
             checkOpen = b;
         }

@@ -1,7 +1,5 @@
-package com.campaign.admission.configuration;
+package com.campaign.admission.configuration.handler;
 
-import com.campaign.admission.domain.Role;
-import com.campaign.admission.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +31,6 @@ public class AuthenticationHandler extends SimpleUrlAuthenticationSuccessHandler
                        Authentication authentication) throws IOException {
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         String targetUrl = determineTargetUrl(authentication) + request.getQueryString();
-        request.getSession().setAttribute("role", getRole(authentication));
         if (response.isCommitted()) {
             log.debug("Response already committed!");
 
@@ -54,11 +51,5 @@ public class AuthenticationHandler extends SimpleUrlAuthenticationSuccessHandler
         }
 
         return "/api/home";
-    }
-
-    private Role getRole(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-
-        return user.getRole();
     }
 }

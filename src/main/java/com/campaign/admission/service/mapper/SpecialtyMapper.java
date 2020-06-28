@@ -36,7 +36,7 @@ public class SpecialtyMapper {
                     .build()).orElse(null);
         } catch (Exception exception) {
             String message = "Specialty mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new DatabaseRuntimeException(exception, message);
         }
     }

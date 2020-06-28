@@ -1,4 +1,4 @@
-package com.campaign.admission.configuration;
+package com.campaign.admission.configuration.handler;
 
 import com.campaign.admission.exception.ServiceRuntimeException;
 import com.campaign.admission.exception.UserValidatorRuntimeException;

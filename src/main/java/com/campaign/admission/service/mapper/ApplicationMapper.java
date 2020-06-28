@@ -33,19 +33,19 @@ public class ApplicationMapper {
                     .build();
         } catch (Exception exception) {
             String message = "Application mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new DatabaseRuntimeException(exception, message);
         }
     }
 
     public ApplicationEntity mapEntityFromDomain(Application application, UserEntity user, SpecialtyEntity specialty) {
         try {
-            return isNull(application) ? null :
+            return isNull(application) | isNull(user) | isNull(specialty) ? null :
                     new ApplicationEntity(user, specialty,
                             application.getMarkSum());
         } catch (Exception exception) {
             String message = "ApplicationEntity mapping exception!";
-            log.warn(message, exception);
+            log.debug(message, exception);
             throw new ServiceRuntimeException(exception, message);
         }
     }

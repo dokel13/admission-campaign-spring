@@ -24,6 +24,7 @@ import static java.lang.Math.min;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
+import static org.springframework.data.domain.PageRequest.of;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Service
@@ -38,7 +39,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<String> getAllSubjects() {
         if (validateAdmissionOpen(specialtyRepository.findSpecialtiesOpens())) {
-            return examRepository.findAllSubjects();
+            return subjectRepository.findAllSubjects();
         }
 
         return null;
@@ -52,7 +53,8 @@ public class AdminServiceImpl implements AdminService {
         } else {
             List<SpecialtyEntity> specialtyEntities = specialtyRepository.findAll();
             for (SpecialtyEntity specialty : specialtyEntities) {
-                applicationRepository.setEnrollmentsBySpecialties(true, specialty.getSpecialty(), specialty.getMaxStudentAmount());
+                applicationRepository.setEnrollmentsBySpecialties(true, specialty.getSpecialty(),
+                        specialty.getMaxStudentAmount());
             }
         }
         specialtyRepository.setAdmission(open);
@@ -61,8 +63,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<Exam> getExamsPaginated(String subject, Integer page, Integer pageSize) {
         if (validateAdmissionOpen(specialtyRepository.findSpecialtiesOpens())) {
-            PageRequest pageRequest = PageRequest.of(page, pageSize);
-            PageImpl<ExamEntity> exams = examRepository.findBySubject(subjectRepository.findBySubject(subject), pageRequest);
+            PageRequest pageRequest = of(page, pageSize);
+            PageImpl<ExamEntity> exams = examRepository.findBySubject(subject, pageRequest);
             if (exams.hasContent()) {
                 return exams.stream().map(examMapper::mapDomainFromEntity).collect(toList());
             }

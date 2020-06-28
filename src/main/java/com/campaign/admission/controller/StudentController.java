@@ -9,12 +9,8 @@ import com.campaign.admission.exception.ServiceRuntimeException;
 import com.campaign.admission.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +19,7 @@ import java.util.List;
 import static com.campaign.admission.util.PaginationUtils.countPages;
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @RequestMapping("/api/student")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,7 +34,7 @@ public class StudentController {
     @GetMapping
     public ModelAndView home() {
         ModelAndView model = new ModelAndView("student/home");
-        User user = getUserFromSecurity();
+        User user = getUserFromSecContext();
         Application application = studentService.getApplication(user.getEmail());
         Boolean enrollment;
         if (application != null) {
@@ -56,7 +53,7 @@ public class StudentController {
     public ModelAndView subjects() {
         ModelAndView model = new ModelAndView("student/subjects");
         try {
-            List<String> subjects = studentService.getUserFreeSubjects(getUserFromSecurity().getEmail());
+            List<String> subjects = studentService.getUserFreeSubjects(getUserFromSecContext().getEmail());
             model.addObject("subjects", subjects);
         } catch (ServiceRuntimeException e) {
             model.addObject("exception", e);
@@ -66,8 +63,11 @@ public class StudentController {
     }
 
     @PostMapping("/exams")
-    public String examRegistration(HttpServletRequest request) {
-        studentService.saveExamSubjects(request.getParameterValues("subject"), getUserFromSecurity().getEmail());
+    public String examRegistration(@RequestParam(value = "subject", required = false) String[] subject,
+                                   HttpServletRequest request) {
+        if (subject != null) {
+            studentService.saveExamSubjects(subject, getUserFromSecContext().getEmail());
+        }
 
         return "redirect:/api/home?" + request.getQueryString();
     }
@@ -82,7 +82,7 @@ public class StudentController {
     }
 
     @GetMapping("/specialty/{specialty:\\D+\\.\\D+|\\D+}")
-    public ModelAndView specialty(@PathVariable(value = "specialty") String specialtyName) {
+    public ModelAndView specialty(@PathVariable("specialty") String specialtyName) {
         ModelAndView model = new ModelAndView("student/specialty");
         Specialty specialty = studentService.getSpecialty(specialtyName);
         model.addObject("specialty", specialty);
@@ -91,10 +91,10 @@ public class StudentController {
     }
 
     @GetMapping("/specialty/apply/{specialty:\\D+\\.\\D+|\\D+}")
-    public ModelAndView specialtyApply(@PathVariable(value = "specialty") String specialtyName, HttpServletRequest request) {
+    public ModelAndView specialtyApply(@PathVariable("specialty") String specialtyName, HttpServletRequest request) {
         ModelAndView model = new ModelAndView();
         try {
-            studentService.specialtyApply(getUserFromSecurity().getEmail(), specialtyName);
+            studentService.specialtyApply(getUserFromSecContext().getEmail(), specialtyName);
             model.setViewName("redirect:/api/home?" + request.getQueryString());
         } catch (ServiceRuntimeException | AdmissionValidatorRuntimeException e) {
             request.getSession().setAttribute("exception", e);
@@ -107,17 +107,17 @@ public class StudentController {
     @GetMapping("/results")
     public ModelAndView results() {
         ModelAndView model = new ModelAndView("student/results");
-        List<Exam> exams = studentService.getResults(getUserFromSecurity().getEmail());
+        List<Exam> exams = studentService.getResults(getUserFromSecContext().getEmail());
         model.addObject("exams", exams);
 
         return model;
     }
 
     @GetMapping("/rating")
-    public ModelAndView rating(HttpServletRequest request) {
+    public ModelAndView rating(@RequestParam("page") String pageParam, HttpServletRequest request) {
         ModelAndView model = new ModelAndView();
-        int page = parseInt(ofNullable(request.getParameter("page")).orElse("1"));
-        Application application = studentService.getApplication(getUserFromSecurity().getEmail());
+        int page = parseInt(ofNullable(pageParam).orElse("1"));
+        Application application = studentService.getApplication(getUserFromSecContext().getEmail());
         if (application == null) {
             model.setViewName("redirect:/api/home?" + request.getQueryString()
                     .replace(PAGE_STRING + page + "&", ""));
@@ -141,9 +141,8 @@ public class StudentController {
         return model;
     }
 
-    private User getUserFromSecurity() {
-        return (User) SecurityContextHolder
-                .getContext()
+    private User getUserFromSecContext() {
+        return (User) getContext()
                 .getAuthentication()
                 .getPrincipal();
     }
