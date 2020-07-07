@@ -1,91 +1,81 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
-<fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle var="messages" basename="messages"/>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title><fmt:message key="login.page" bundle="${messages}"/></title>
+        <title><spring:message code="login.page"/></title>
         <style><%@include file="/WEB-INF/css/home.css" %></style>
         <script><%@include file="/WEB-INF/js/popup.js" %></script>
     </head>
     <body>
         <div class="language">
-            <fmt:message var="choose_ukrainian" key="choose.ukrainian" bundle="${messages}"/>
-            <a href="${pageContext.request.contextPath}/api/home?locale=ua" title="${choose_ukrainian}">UA</a>/
+            <a href="${pageContext.request.contextPath}/api/home?locale=ua" title="<spring:message code="choose.ukrainian"/>">UA</a>/
             <a href="${pageContext.request.contextPath}/api/home?locale=en" title="choose English">EN</a>
         </div>
         <div class="login-container">
             <div class="login-form-1">
-                <h3><fmt:message key="enter.admission.campaign" bundle="${messages}"/></h3>
+                <h3><spring:message code="enter.admission.campaign"/></h3>
                 <form class="login-form" method="post" action="${pageContext.request.contextPath}/api/login?locale=${sessionScope.locale}">
                     <div class="form-group" onclick="popup_function()">
                         <c:if test="${sessionScope.exception.message == 'Login exception! User doesn`t exist!'}">
                             <span class="popup_text" id="my_popup">
-                                <fmt:message key="login.exception" bundle="${messages}"/>
+                                <spring:message code="login.exception"/>
                                 <c:remove var="exception" scope="session"/>
                             </span>
                         </c:if>
                         <c:if test="${sessionScope.exception.message == 'Wrong password!'}">
                             <span class="popup_text" id="my_popup">
-                                <fmt:message key="wrong.password" bundle="${messages}"/>
+                                <spring:message code="wrong.password"/>
                                 <c:remove var="exception" scope="session"/>
                             </span>
                         </c:if>
-                        <fmt:message var="your_email" key="your.email" bundle="${messages}"/>
                         <input class="input-form" required="required" maxlength="30"
-                               type="text" name="email" placeholder="${your_email} *" value=""/>
+                               type="text" name="email" placeholder="<spring:message code="your.email"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="your_password" key="your.password" bundle="${messages}"/>
                         <input class="input-form" required="required" maxlength="30"
-                               type="password" name="password" placeholder="${your_password} *" value=""/>
+                               type="password" name="password" placeholder="<spring:message code="your.password"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="login" key="login" bundle="${messages}"/>
-                        <input type="submit" class="btnSubmit" value="${login}"/>
+                        <input type="submit" class="btnSubmit" value="<spring:message code="login"/>"/>
                     </div>
                 </form>
             </div>
             <div class="login-form-2">
-                <h3><fmt:message key="register.enter" bundle="${messages}"/></h3>
+                <h3><spring:message code="register.enter"/></h3>
                 <form class="registration-form" method="post" action="${pageContext.request.contextPath}/api/register?locale=${sessionScope.locale}">
                     <div class="form-group" onclick="popup_function()">
                         <c:if test="${sessionScope.exception.message == 'Registration exception! User already exists!'}">
                             <span class="popup_text" id="my_popup">
-                                <fmt:message key="registration.exception" bundle="${messages}"/>
+                                <spring:message code="registration.exception"/>
                                 <c:remove var="exception" scope="session"/>
                             </span>
                         </c:if>
                         <c:if test="${sessionScope.exception.message == 'Wrong email!'}">
                             <span class="popup_text" id="my_popup">
-                                <fmt:message key="wrong.email" bundle="${messages}"/>
+                                <spring:message code="wrong.email"/>
                                 <c:remove var="exception" scope="session"/>
                             </span>
                         </c:if>
-                        <fmt:message var="your_email" key="your.email" bundle="${messages}"/>
                         <input class="input-form" required="required" maxlength="30"
-                            type="text" name="email" placeholder="${your_email} *" value=""/>
+                            type="text" name="email" placeholder="<spring:message code="your.email"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="your_name" key="your.name" bundle="${messages}"/>
                         <input class="input-form" pattern="[A-Za-zА-Яa-яЄєІіЇї']+" required="required" maxlength="30"
-                            type="text" name="name" placeholder="${your_name} *" value=""/>
+                            type="text" name="name" placeholder="<spring:message code="your.name"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="your_surname" key="your.surname" bundle="${messages}"/>
                         <input class="input-form" pattern="[A-Za-zА-Яa-яЄєІіЇї']+" required="required" maxlength="30"
-                            type="text" name="surname" placeholder="${your_surname} *" value=""/>
+                            type="text" name="surname" placeholder="<spring:message code="your.surname"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="new_password" key="new.password" bundle="${messages}"/>
                         <input class="input-form" required="required" maxlength="30"
-                               type="password" name="password" placeholder="${new_password} *" value=""/>
+                               type="password" name="password" placeholder="<spring:message code="new.password"/> *" value=""/>
                     </div>
                     <div class="form-group">
-                        <fmt:message var="register" key="register" bundle="${messages}"/>
-                        <input type="submit" class="btnSubmit" value="${register}"/>
+                        <input type="submit" class="btnSubmit" value="<spring:message code="register"/>"/>
                     </div>
                 </form>
             </div>

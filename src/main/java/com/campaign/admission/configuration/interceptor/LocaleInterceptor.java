@@ -1,15 +1,18 @@
 package com.campaign.admission.configuration.interceptor;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static org.springframework.web.servlet.support.RequestContextUtils.getLocaleResolver;
 
 @Component
 public class LocaleInterceptor extends HandlerInterceptorAdapter {
@@ -23,9 +26,8 @@ public class LocaleInterceptor extends HandlerInterceptorAdapter {
         LOCALES.put("ua", new Locale("ua"));
     }
 
-
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Locale locale = LOCALES.get(request.getParameter("locale"));
         if (locale == null) {
             String redirectURI = request.getRequestURI() + "?";
@@ -37,10 +39,18 @@ public class LocaleInterceptor extends HandlerInterceptorAdapter {
             } else {
                 redirectURI += DEFAULT_LOCALE_PARAMETER;
             }
-            response.sendRedirect(redirectURI);
+            try {
+                response.sendRedirect(redirectURI);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return false;
         } else {
+            LocaleResolver localeResolver = getLocaleResolver(request);
+            if (localeResolver != null) {
+                localeResolver.setLocale(request, response, locale);
+            }
             request.getSession().setAttribute("locale", locale);
         }
 

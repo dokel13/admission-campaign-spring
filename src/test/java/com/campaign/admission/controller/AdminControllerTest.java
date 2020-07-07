@@ -128,7 +128,7 @@ public class AdminControllerTest {
                 .param("email", email)
                 .param("mark", mark)
                 .with(user(admin)))
-                .andExpect(redirectedUrl("/api/admin/subject/math?locale=ua"))
+                .andExpect(redirectedUrl("/api/admin/subject/math?page=1&locale=ua"))
                 .andExpect(status().is3xxRedirection());
 
         verify(adminService).saveMarks("math", email, mark);

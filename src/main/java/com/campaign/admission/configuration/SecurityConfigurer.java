@@ -63,7 +63,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                     .failureHandler(exceptionHandler)
                     .usernameParameter("email")
                     .passwordParameter("password")
-                    .permitAll()
+                        .permitAll()
                     .and()
                 .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))

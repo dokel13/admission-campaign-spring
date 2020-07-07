@@ -13,8 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Locale;
 
 import static com.campaign.admission.util.PaginationUtils.countPages;
 import static java.lang.Integer.parseInt;
@@ -28,6 +29,7 @@ public class StudentController {
 
     private static final Integer PAGE_SIZE = 3;
     private static final String PAGE_STRING = "page=";
+    private static final String LOCALE_STRING = "locale=";
 
     private final StudentService studentService;
 
@@ -64,12 +66,12 @@ public class StudentController {
 
     @PostMapping("/exams")
     public String examRegistration(@RequestParam(value = "subject", required = false) String[] subject,
-                                   HttpServletRequest request) {
+                                   Locale locale) {
         if (subject != null) {
             studentService.saveExamSubjects(subject, getUserFromSecContext().getEmail());
         }
 
-        return "redirect:/api/home?" + request.getQueryString();
+        return "redirect:/api/home?" + LOCALE_STRING + locale;
     }
 
     @GetMapping("/specialties")
@@ -91,14 +93,15 @@ public class StudentController {
     }
 
     @GetMapping("/specialty/apply/{specialty:\\D+\\.\\D+|\\D+}")
-    public ModelAndView specialtyApply(@PathVariable("specialty") String specialtyName, HttpServletRequest request) {
+    public ModelAndView specialtyApply(@PathVariable("specialty") String specialtyName, Locale locale,
+                                       HttpSession session) {
         ModelAndView model = new ModelAndView();
         try {
             studentService.specialtyApply(getUserFromSecContext().getEmail(), specialtyName);
-            model.setViewName("redirect:/api/home?" + request.getQueryString());
+            model.setViewName("redirect:/api/home?" + LOCALE_STRING + locale);
         } catch (ServiceRuntimeException | AdmissionValidatorRuntimeException e) {
-            request.getSession().setAttribute("exception", e);
-            model.setViewName("redirect:/api/student/specialty/" + specialtyName + "?" + request.getQueryString());
+            session.setAttribute("exception", e);
+            model.setViewName("redirect:/api/student/specialty/" + specialtyName + "?" + LOCALE_STRING + locale);
         }
 
         return model;
@@ -114,21 +117,20 @@ public class StudentController {
     }
 
     @GetMapping("/rating")
-    public ModelAndView rating(@RequestParam("page") String pageParam, HttpServletRequest request) {
+    public ModelAndView rating(@RequestParam(value = "page", required = false) String pageParam, Locale locale) {
         ModelAndView model = new ModelAndView();
         int page = parseInt(ofNullable(pageParam).orElse("1"));
         Application application = studentService.getApplication(getUserFromSecContext().getEmail());
         if (application == null) {
-            model.setViewName("redirect:/api/home?" + request.getQueryString()
-                    .replace(PAGE_STRING + page + "&", ""));
+            model.setViewName("redirect:/api/home?" + LOCALE_STRING + locale);
 
             return model;
         }
         String specialty = application.getSpecialty().getName();
         int pagesCount = countPages(PAGE_SIZE, studentService.countApplicationsBySpecialty(specialty));
         if (page > pagesCount) {
-            model.setViewName("redirect:/api/student/rating?" + request.getQueryString()
-                    .replace(PAGE_STRING + page, PAGE_STRING + pagesCount));
+            model.setViewName("redirect:/api/student/rating?" + PAGE_STRING + pagesCount +
+                    "&" + LOCALE_STRING + locale);
 
             return model;
         }

@@ -3,14 +3,13 @@ package com.campaign.admission.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-
+import java.util.Locale;
 
 @Controller
 public class StartController {
 
     @RequestMapping("/")
-    public String redirect(HttpServletRequest request) {
-        return "redirect:/api/home?" + request.getQueryString();
+    public String redirect(Locale locale) {
+        return "redirect:/api/home?locale=" + locale;
     }
 }

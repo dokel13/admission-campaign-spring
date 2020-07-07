@@ -5,21 +5,18 @@ import com.campaign.admission.domain.User;
 import com.campaign.admission.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 import static com.campaign.admission.util.PaginationUtils.countPages;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
 
 @RequestMapping("/api/admin")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -28,6 +25,7 @@ public class AdminController {
 
     private static final Integer PAGE_SIZE = 3;
     private static final String PAGE_STRING = "page=";
+    private static final String LOCALE_STRING = "locale=";
 
     private final AdminService adminService;
 
@@ -50,7 +48,7 @@ public class AdminController {
 
     @GetMapping("/set_admission")
     public ModelAndView admission(@RequestParam(value = "open", required = false) String openParam,
-                                  HttpServletRequest request) {
+                                  Locale locale) {
         ModelAndView model = new ModelAndView();
         Boolean open;
         if (openParam != null) {
@@ -58,21 +56,20 @@ public class AdminController {
             adminService.setAdmission(open);
         }
         open = adminService.checkAdmission();
-        model.setViewName("redirect:/api/admin?" + request.getQueryString()
-                .replace("open=" + open + "&", ""));
+        model.setViewName("redirect:/api/admin?" + LOCALE_STRING + locale);
 
         return model;
     }
 
     @GetMapping("/subject/{subject}")
     public ModelAndView subject(@PathVariable("subject") String subject,
-                                @RequestParam("page") String pageParam, HttpServletRequest request) {
+                                @RequestParam(value = "page", required = false) String pageParam, Locale locale) {
         ModelAndView model = new ModelAndView();
         int page = parseInt(ofNullable(pageParam).orElse("1"));
         int pagesCount = countPages(PAGE_SIZE, adminService.countExamsBySubject(subject));
         if (page > pagesCount) {
-            model.setViewName("redirect:/api/admin/subject/" + subject + "?" + request.getQueryString()
-                    .replace(PAGE_STRING + page, PAGE_STRING + pagesCount));
+            model.setViewName("redirect:/api/admin/subject/" + subject + "?" + PAGE_STRING + pagesCount +
+                    "&" + LOCALE_STRING + locale);
 
             return model;
         }
@@ -89,11 +86,14 @@ public class AdminController {
     public String saveMarks(@PathVariable("subject") String subject,
                             @RequestParam(value = "email", required = false) String[] email,
                             @RequestParam(value = "mark", required = false) String[] mark,
-                            HttpServletRequest request) {
+                            @RequestParam(value = "page", required = false) String pageParam,
+                            Locale locale) {
         if (mark != null) {
             adminService.saveMarks(subject, email, mark);
         }
+        int page = parseInt(ofNullable(pageParam).orElse("1"));
 
-        return "redirect:/api/admin/subject/" + subject + "?" + request.getQueryString();
+        return "redirect:/api/admin/subject/" + subject + "?" + PAGE_STRING + page +
+                "&" + LOCALE_STRING + locale;
     }
 }

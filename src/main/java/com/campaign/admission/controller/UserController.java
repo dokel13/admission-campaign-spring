@@ -15,9 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -28,18 +28,19 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @SessionAttributes("exception")
 public class UserController {
 
-    private final UserService userService;
+    private static final String LOCALE_STRING = "locale=";
 
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/home")
-    public ModelAndView home(HttpServletRequest request) {
+    public ModelAndView home(Locale locale) {
         ModelAndView model = new ModelAndView();
         Role role = getRoleFromSecContext();
         if (role == Role.STUDENT) {
-            model.setViewName("redirect:/api/student?" + request.getQueryString());
+            model.setViewName("redirect:/api/student?" + LOCALE_STRING + locale);
         } else if (role == Role.ADMIN) {
-            model.setViewName("redirect:/api/admin?" + request.getQueryString());
+            model.setViewName("redirect:/api/admin?" + LOCALE_STRING + locale);
         } else {
             model.setViewName("home");
         }
@@ -49,8 +50,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ModelAndView register(@Valid @ModelAttribute("user") User newUser, BindingResult bindingResult,
-                                 HttpServletRequest request) {
-        ModelAndView model = new ModelAndView("redirect:/api/home?" + request.getQueryString());
+                                 Locale locale) {
+        ModelAndView model = new ModelAndView("redirect:/api/home?" + LOCALE_STRING + locale);
         if (bindingResult.hasErrors()) {
             model.addObject("exception", new UserValidatorRuntimeException(requireNonNull(bindingResult
                     .getFieldError("email")).getDefaultMessage()));
