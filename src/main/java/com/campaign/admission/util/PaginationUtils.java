@@ -3,15 +3,15 @@ package com.campaign.admission.util;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaginationUtils {
+public final class PaginationUtils {
 
-    public static Integer countPages(Integer pageSize, Integer examsCount) {
+    public static Integer countPages(Integer pageSize, Integer entityCount) {
         int pagesCount;
-        if (examsCount >= 0 && examsCount <= pageSize) {
+        if (entityCount >= 0 && entityCount <= pageSize) {
             pagesCount = 1;
         } else {
-            pagesCount = examsCount / pageSize;
-            if (examsCount > 2 && (examsCount % pageSize) > 0) {
+            pagesCount = entityCount / pageSize;
+            if (entityCount > 2 && (entityCount % pageSize) > 0) {
                 pagesCount += 1;
             }
         }

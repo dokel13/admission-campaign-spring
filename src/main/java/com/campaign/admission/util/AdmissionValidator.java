@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AdmissionValidator {
+public final class AdmissionValidator {
 
     public static Integer validateMarks(List<Exam> exams, List<Requirement> requirements) {
         int result = 0;
